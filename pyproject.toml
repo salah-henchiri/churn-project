@@ -1,8 +1,9 @@
 [project]
 name = "churn-project"
 version = "0.1.0"
-description = "Add your description here"
+description = "Customer churn model packaged as a Python project"
 readme = "README.md"
+authors = [{ name = "Salah Henchiri" }]
 requires-python = ">=3.12"
 dependencies = [
     "joblib>=1.6.0",
@@ -12,15 +13,29 @@ dependencies = [
 ]
 
 [project.scripts]
-churn-project = "churn_project:main"
+churn-train = "churn_project.train:main"
 
 [build-system]
-requires = ["uv_build>=0.13.6,<0.14.0"]
+requires = ["uv_build>=0.11.32,<0.12.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
     "pre-commit>=4.7.0",
+    "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "ruff>=0.17.3",
 ]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# E/W: pycodestyle, F: pyflakes, I: import order, B: bugbear, UP: modern syntax, N: naming
+select = ["E", "W", "F", "I", "B", "UP", "N"]
+ignore = ["N803", "N806"]  # allow X, X_train (usual ML notation)
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
