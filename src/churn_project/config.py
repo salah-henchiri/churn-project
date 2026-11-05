@@ -1,4 +1,4 @@
-"""Training configuration, read from a YAML file and checked once."""
+"""Pipeline parameters, read from params.yaml and checked once."""
 
 from __future__ import annotations
 
@@ -11,8 +11,7 @@ import yaml
 
 @dataclass(frozen=True)
 class Config:
-    data_url: str
-    data_path: Path
+    raw_data: Path
     test_size: float
     seed: int
     cv_folds: int
@@ -22,7 +21,7 @@ class Config:
     registered_model: str
 
 
-def load_config(path: str | Path) -> Config:
+def load_config(path: str | Path = "params.yaml") -> Config:
     """Read the YAML file at `path` and return an immutable, validated Config."""
     with open(path, encoding="utf-8") as f:
         raw = yaml.safe_load(f)
@@ -38,8 +37,7 @@ def config_from_dict(raw: dict[str, Any]) -> Config:
         raise ValueError(f"split.cv_folds must be at least 2, got {cv_folds}")
 
     return Config(
-        data_url=raw["data"]["url"],
-        data_path=Path(raw["data"]["path"]),
+        raw_data=Path(raw["data"]["raw"]),
         test_size=test_size,
         seed=int(raw["split"]["seed"]),
         cv_folds=cv_folds,

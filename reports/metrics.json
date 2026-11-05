@@ -1,0 +1,7 @@
+{
+  "test_auc": 0.8411,
+  "test_accuracy": 0.7905,
+  "test_log_loss": 0.4203,
+  "test_brier": 0.1388,
+  "n_test": 1761
+}

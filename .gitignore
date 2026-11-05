@@ -9,9 +9,7 @@ wheels/
 # Virtual environments
 .venv
 
-# project data and outputs are not versioned with Git
-data/
-artifacts/
+# local results, not source code (data and models are versioned by DVC, not Git)
 .coverage
 mlflow.db
 mlartifacts/

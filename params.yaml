@@ -1,7 +1,7 @@
-# Every value that changes the trained model is set here, not in the code.
+# Every value that changes the prepared data or the trained model is set here.
+# DVC reads this file: when a value used by a stage changes, the stage is re-run.
 data:
-  url: https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv
-  path: data/raw/telco_churn.csv
+  raw: data/raw/telco_churn.csv
 
 split:
   test_size: 0.25

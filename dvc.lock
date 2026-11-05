@@ -1,0 +1,85 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: uv run churn-prepare
+    deps:
+    - path: data/raw/telco_churn.csv
+      hash: md5
+      md5: 3b0bfab28a8101b4e4fdd08025a5c235
+      size: 970457
+    - path: src/churn_project/data.py
+      hash: md5
+      md5: a9141e9d0638a8900967ad9482d66252
+      size: 1389
+    - path: src/churn_project/prepare.py
+      hash: md5
+      md5: adb24fa20eb7163604da19fc0cdfe5e7
+      size: 1195
+    params:
+      params.yaml:
+        data.raw: data/raw/telco_churn.csv
+        split.seed: 0
+        split.test_size: 0.25
+    outs:
+    - path: data/prepared
+      hash: md5
+      md5: 94a30bfd89e89263d625a078244902e6.dir
+      size: 535869
+      nfiles: 2
+  train:
+    cmd: uv run churn-train
+    deps:
+    - path: data/prepared/train.csv
+      hash: md5
+      md5: 9a0425ae265ba6462818b77b71d6b506
+      size: 402180
+    - path: src/churn_project/features.py
+      hash: md5
+      md5: 3c7fdbd0b98e2b3415e92bcb5a1a4715
+      size: 858
+    - path: src/churn_project/model.py
+      hash: md5
+      md5: 22e856ce9643bc620f4e7f098dfd0009
+      size: 1289
+    - path: src/churn_project/train.py
+      hash: md5
+      md5: dfa5fe29d5a151b8672cc67ef18a25e5
+      size: 3086
+    params:
+      params.yaml:
+        model:
+          type: logistic_regression
+          params:
+            C: 1.0
+            max_iter: 1000
+        split.cv_folds: 5
+        split.seed: 0
+    outs:
+    - path: models/model.skops
+      hash: md5
+      md5: dfb2fcf295d86aa168deb5f13d219ed2
+      size: 119539
+    - path: reports/train.json
+      hash: md5
+      md5: fb2a282ac2df4e4166ce9d4911cb84c7
+      size: 51
+  evaluate:
+    cmd: uv run churn-evaluate
+    deps:
+    - path: data/prepared/test.csv
+      hash: md5
+      md5: 35155b8d2df85ca287b5504304f0be0b
+      size: 133689
+    - path: models/model.skops
+      hash: md5
+      md5: dfb2fcf295d86aa168deb5f13d219ed2
+      size: 119539
+    - path: src/churn_project/evaluate.py
+      hash: md5
+      md5: f14a8e504fb1067d5412b71dc28265cd
+      size: 1846
+    outs:
+    - path: reports/metrics.json
+      hash: md5
+      md5: fd0489de9d92f96259d55626660f30c9
+      size: 120

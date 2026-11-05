@@ -1,9 +1,12 @@
-"""Loading and cleaning of the Telco Customer Churn data."""
+"""Loading and cleaning of the Telco Customer Churn data.
+
+The raw file is not downloaded by the code any more: it is versioned with DVC
+(Section 4) and obtained with `dvc pull`.
+"""
 
 from __future__ import annotations
 
 import logging
-import urllib.request
 from pathlib import Path
 
 import pandas as pd
@@ -13,17 +16,6 @@ from churn_project.features import CATEGORICAL, NUMERIC, TARGET
 logger = logging.getLogger(__name__)
 
 REQUIRED_COLUMNS = [*NUMERIC, *CATEGORICAL, TARGET]
-
-
-def download(url: str, path: Path) -> Path:
-    """Download the raw CSV file once; do nothing if it is already there."""
-    if path.exists():
-        logger.info("data already present at %s", path)
-        return path
-    path.parent.mkdir(parents=True, exist_ok=True)
-    logger.info("downloading %s", url)
-    urllib.request.urlretrieve(url, path)
-    return path
 
 
 def clean(df: pd.DataFrame) -> pd.DataFrame:

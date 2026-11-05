@@ -1,0 +1,40 @@
+stages:
+  prepare:
+    cmd: uv run churn-prepare
+    deps:
+      - data/raw/telco_churn.csv
+      - src/churn_project/prepare.py
+      - src/churn_project/data.py
+    params:
+      - data.raw
+      - split.test_size
+      - split.seed
+    outs:
+      - data/prepared
+
+  train:
+    cmd: uv run churn-train
+    deps:
+      - data/prepared/train.csv
+      - src/churn_project/train.py
+      - src/churn_project/model.py
+      - src/churn_project/features.py
+    params:
+      - split.seed
+      - split.cv_folds
+      - model
+    outs:
+      - models/model.skops
+    metrics:
+      - reports/train.json:
+          cache: false
+
+  evaluate:
+    cmd: uv run churn-evaluate
+    deps:
+      - data/prepared/test.csv
+      - models/model.skops
+      - src/churn_project/evaluate.py
+    metrics:
+      - reports/metrics.json:
+          cache: false

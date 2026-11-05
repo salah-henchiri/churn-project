@@ -8,7 +8,7 @@ import yaml
 from churn_project.config import load_config
 
 VALID = {
-    "data": {"url": "https://example.com/data.csv", "path": "data/raw.csv"},
+    "data": {"raw": "data/raw/telco_churn.csv"},
     "split": {"test_size": 0.25, "seed": 0, "cv_folds": 5},
     "model": {"type": "logistic_regression", "params": {"C": 1.0}},
     "mlflow": {"experiment": "churn", "registered_model": "churn-model"},
@@ -16,7 +16,7 @@ VALID = {
 
 
 def write(tmp_path: Path, content: dict) -> Path:
-    path = tmp_path / "train.yaml"
+    path = tmp_path / "params.yaml"
     path.write_text(yaml.safe_dump(content))
     return path
 
@@ -27,6 +27,12 @@ def test_valid_config_is_loaded(tmp_path):
     assert cfg.cv_folds == 5
     assert cfg.model_type == "logistic_regression"
     assert cfg.experiment == "churn"
+    assert cfg.raw_data == Path("data/raw/telco_churn.csv")
+
+
+def test_project_params_file_is_valid():
+    cfg = load_config("params.yaml")
+    assert cfg.model_type in ("logistic_regression", "hist_gradient_boosting")
 
 
 @pytest.mark.parametrize("test_size", [0, 1, 1.5, -0.1])
