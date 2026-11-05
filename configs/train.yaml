@@ -6,11 +6,14 @@ data:
 split:
   test_size: 0.25
   seed: 0
+  cv_folds: 5        # cross-validation on the training part, used to compare models
 
 model:
+  type: logistic_regression
   params:
     C: 1.0
     max_iter: 1000
 
-output:
-  dir: artifacts
+mlflow:
+  experiment: churn
+  registered_model: churn-model

@@ -12,7 +12,7 @@ from churn_project.model import build_model
 def fitted(raw_df):
     df = clean(raw_df)
     X, y = df[NUMERIC + CATEGORICAL], df[TARGET]
-    return build_model({"max_iter": 1000}).fit(X, y), X
+    return build_model("logistic_regression", {"max_iter": 1000}).fit(X, y), X
 
 
 def test_probabilities_are_valid(fitted):
@@ -42,3 +42,15 @@ def test_column_order_does_not_matter(fitted):
     model, X = fitted
     shuffled = X[list(reversed(X.columns))]
     np.testing.assert_allclose(model.predict_proba(X), model.predict_proba(shuffled))
+
+
+def test_gradient_boosting_pipeline(raw_df):
+    df = clean(raw_df)
+    X, y = df[NUMERIC + CATEGORICAL], df[TARGET]
+    model = build_model("hist_gradient_boosting", {"max_iter": 20, "random_state": 0}).fit(X, y)
+    assert model.predict_proba(X).shape == (len(X), 2)
+
+
+def test_unknown_model_type_is_rejected():
+    with pytest.raises(ValueError, match="unknown model type"):
+        build_model("random_forest")

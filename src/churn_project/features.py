@@ -19,10 +19,13 @@ TARGET = "Churn"
 
 
 def build_preprocessor() -> ColumnTransformer:
-    """Standardise the numeric columns and one-hot encode the categorical ones."""
+    """Standardise the numeric columns and one-hot encode the categorical ones.
+
+    The encoder returns a dense matrix so that every model type accepts it.
+    """
     return ColumnTransformer(
         [
             ("num", StandardScaler(), NUMERIC),
-            ("cat", OneHotEncoder(handle_unknown="ignore"), CATEGORICAL),
+            ("cat", OneHotEncoder(handle_unknown="ignore", sparse_output=False), CATEGORICAL),
         ]
     )

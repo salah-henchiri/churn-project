@@ -13,3 +13,6 @@ wheels/
 data/
 artifacts/
 .coverage
+mlflow.db
+mlartifacts/
+mlruns/

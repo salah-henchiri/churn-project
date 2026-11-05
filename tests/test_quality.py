@@ -24,6 +24,6 @@ def test_model_auc_is_above_threshold():
     df = load(DATA)
     X, y = df[NUMERIC + CATEGORICAL], df[TARGET]
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, stratify=y, random_state=0)
-    model = build_model({"max_iter": 1000}).fit(X_tr, y_tr)
+    model = build_model("logistic_regression", {"max_iter": 1000}).fit(X_tr, y_tr)
     auc = roc_auc_score(y_te, model.predict_proba(X_te)[:, 1])
     assert auc >= MIN_AUC, f"AUC {auc:.3f} is below the threshold {MIN_AUC}"
